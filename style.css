@@ -1,0 +1,1288 @@
+/* ============================================
+   THE HORROR EXPERIENCE - STYLESHEET
+   Curated Dark Horror Aesthetics & Real Ghosts
+   ============================================ */
+
+/* === ROOT VARIABLES === */
+:root {
+    --blood-dark: #4a0000;
+    --blood-deep: #680000;
+    --blood-crimson: #8b0000;
+    --blood-bright: #b30000;
+    --dark-void: #030303;
+    --card-bg: rgba(12, 12, 14, 0.92);
+    --fog-gray: rgba(120, 120, 120, 0.12);
+    --eerie-green: #00ff66;
+    --joker-purple: #4a0e4e;
+    --joker-green: #1f8a2f;
+    --valak-glow: #e6b800;
+    --mouse-x: 50vw;
+    --mouse-y: 50vh;
+}
+
+/* === DARK RED CURSOR (ABSOLUTELY NO PINK) === */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M2 2 L2 20 L7 15 L12 25 L16 23 L11 13 L18 13 Z' fill='%23500000' stroke='%23000000' stroke-width='1.8' stroke-linejoin='round'/%3E%3Cpath d='M3 4 L3 18 L7 14 L12 23 L14 22 L10 12 L16 12 Z' fill='%23880000'/%3E%3Ccircle cx='3' cy='3' r='1.5' fill='%23aa0000'/%3E%3C/svg%3E") 2 2, auto !important;
+}
+
+/* Dark red pointer cursor for all interactive elements */
+a, button, [role="button"], input[type="submit"], input[type="button"], 
+.door, .enter-button, .escape-btn, .real-ghost-card, .crawler-box, 
+.ghost-display-stage, [onclick], select {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 2 C14 2 5 13 5 18 C5 23 9 27 14 27 C19 27 23 23 23 18 C23 13 14 2 14 2 Z' fill='%23440000' stroke='%23000000' stroke-width='1.8'/%3E%3Cpath d='M14 4 C14 4 7 14 7 18 C7 22 10 25 14 25 C18 25 21 22 21 18 C21 14 14 4 14 4 Z' fill='%23770000'/%3E%3Cellipse cx='11' cy='16' rx='2' ry='4' fill='%23990000' opacity='0.9'/%3E%3C/svg%3E") 14 14, pointer !important;
+}
+
+/* === BASE LAYOUT & BODY === */
+html {
+    scroll-behavior: smooth;
+    background-color: var(--dark-void);
+}
+
+body.horror-body {
+    background: #020202;
+    color: #e0e0e0;
+    font-family: 'Metal Mania', 'Cinzel Decorative', Georgia, serif;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* === DYNAMIC FLASHLIGHT / DARKNESS VIGNETTE === */
+#stalker-flashlight {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 900;
+    background: radial-gradient(
+        circle 380px at var(--mouse-x) var(--mouse-y),
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.4) 45%,
+        rgba(2, 2, 2, 0.88) 75%,
+        rgba(0, 0, 0, 0.98) 100%
+    );
+    transition: background 0.05s ease-out;
+}
+
+/* === BLOOD DROP TRAIL FROM CURSOR === */
+#cursor-trail-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 950;
+    overflow: hidden;
+}
+
+.cursor-blood-dot {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blood-deep);
+    box-shadow: 0 0 6px var(--blood-dark);
+    pointer-events: none;
+    animation: blood-drip-fade 1.2s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+
+@keyframes blood-drip-fade {
+    0% {
+        opacity: 0.9;
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.3) translateY(24px);
+    }
+}
+
+/* === ENTER SCREEN MODAL === */
+#enter-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(ellipse at center, #1b0000 0%, #060000 50%, #000 100%);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#enter-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.enter-content {
+    max-width: 650px;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.warning-symbol {
+    font-size: 72px;
+    animation: pulse-shake 1.8s infinite;
+    filter: drop-shadow(0 0 20px var(--blood-deep));
+}
+
+.enter-title {
+    font-family: 'Nosifer', cursive;
+    font-size: clamp(2.4rem, 7vw, 4.5rem);
+    color: var(--blood-crimson);
+    letter-spacing: 4px;
+    margin: 15px 0;
+    text-shadow: 0 0 25px var(--blood-dark), 0 0 50px #000;
+    animation: text-flicker 4s infinite;
+}
+
+.enter-subtitle {
+    font-size: 1.2rem;
+    color: #a0a0a0;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.enter-warning {
+    font-size: 1.15rem;
+    color: var(--blood-bright);
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    margin-bottom: 30px;
+    animation: pulse-glow 2s infinite;
+}
+
+.enter-button {
+    background: linear-gradient(180deg, #600000 0%, #290000 100%);
+    border: 2px solid var(--blood-crimson);
+    color: #fff;
+    font-family: 'Creepster', cursive;
+    font-size: 1.6rem;
+    letter-spacing: 3px;
+    padding: 16px 48px;
+    border-radius: 4px;
+    box-shadow: 0 0 30px rgba(100, 0, 0, 0.6), inset 0 0 15px rgba(255, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.enter-button:hover {
+    background: linear-gradient(180deg, #850000 0%, #3e0000 100%);
+    border-color: #ff1a1a;
+    box-shadow: 0 0 50px rgba(180, 0, 0, 0.9), inset 0 0 25px rgba(255, 0, 0, 0.4);
+    transform: scale(1.04);
+}
+
+.enter-disclaimer {
+    margin-top: 25px;
+    font-size: 0.85rem;
+    color: #555;
+    font-style: italic;
+}
+
+/* === SCREEN FLASH & JUMPSCARE OVERLAY === */
+#flash-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 99998;
+    transition: opacity 0.05s ease;
+}
+
+#flash-overlay.flash-active {
+    opacity: 0.95;
+}
+
+#flash-overlay.flash-red {
+    background: #900;
+    opacity: 0.85;
+}
+
+#jumpscare-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: opacity 0.08s ease;
+}
+
+#jumpscare-overlay.jumpscare-hidden {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#jumpscare-overlay.jumpscare-active {
+    display: flex;
+    opacity: 1;
+    pointer-events: all;
+    animation: screen-convulsion 0.08s infinite alternate;
+}
+
+#jumpscare-content {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#jumpscare-img {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    filter: contrast(1.5) brightness(1.2) saturate(1.3);
+    animation: jumpscare-lunge 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+    transform-origin: center center;
+}
+
+#jumpscare-blood-splatter {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 20%, rgba(139, 0, 0, 0.4) 60%, rgba(40, 0, 0, 0.9) 100%);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+}
+
+#jumpscare-text {
+    position: absolute;
+    bottom: 8%;
+    font-family: 'Nosifer', cursive;
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+    color: #ff0000;
+    text-shadow: 0 0 20px #000, 0 0 40px #ff0000, 0 0 80px #000;
+    letter-spacing: 6px;
+    animation: glitch 0.2s infinite;
+}
+
+/* === STALKER EYES === */
+#stalker-eyes {
+    position: fixed;
+    z-index: 995;
+    pointer-events: none;
+    display: flex;
+    gap: 32px;
+    transition: opacity 0.4s ease;
+}
+
+#stalker-eyes.stalker-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#stalker-eyes.stalker-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.stalker-eye {
+    width: 22px;
+    height: 10px;
+    background: #000;
+    border-radius: 50%;
+    border: 1px solid rgba(139, 0, 0, 0.8);
+    box-shadow: 0 0 16px var(--blood-bright), inset 0 0 6px #ff0000;
+    position: relative;
+    overflow: hidden;
+    animation: demonic-blink 4s infinite;
+}
+
+.stalker-pupil {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #ff0000;
+    border-radius: 50%;
+    top: 2px;
+    left: 8px;
+    box-shadow: 0 0 8px #ff3333;
+    transition: transform 0.1s ease-out;
+}
+
+/* === RANDOM GHOST EVENT CONTAINERS === */
+/* 1. Left Side Hang */
+#ghost-left {
+    position: fixed;
+    top: 30%;
+    left: 0;
+    width: 220px;
+    height: 380px;
+    z-index: 980;
+    pointer-events: none;
+    transform: translateX(-100%);
+    transition: transform 0.6s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+#ghost-left.ghost-visible {
+    transform: translateX(0);
+}
+
+/* 2. Right Side Hang */
+#ghost-right {
+    position: fixed;
+    top: 35%;
+    right: 0;
+    width: 220px;
+    height: 380px;
+    z-index: 980;
+    pointer-events: none;
+    transform: translateX(100%);
+    transition: transform 0.6s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+#ghost-right.ghost-visible {
+    transform: translateX(0);
+}
+
+.ghost-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.95));
+}
+
+.ghost-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.3) contrast(1.4) brightness(0.85);
+    animation: ghost-twitch 0.15s infinite alternate;
+}
+
+.ghost-shadow-blend {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%);
+    pointer-events: none;
+}
+
+#ghost-left .ghost-shadow-blend {
+    background: linear-gradient(270deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%);
+}
+
+/* 3. Ceiling Stick Ghost */
+#ghost-ceiling {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    width: 320px;
+    height: 380px;
+    z-index: 985;
+    pointer-events: none;
+    transition: transform 0.8s cubic-bezier(0.15, 0.85, 0.25, 1);
+}
+
+#ghost-ceiling.ghost-visible {
+    transform: translateX(-50%) translateY(0);
+}
+
+.ghost-ceiling-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ghost-ceiling-wrapper img {
+    width: 280px;
+    height: 320px;
+    object-fit: cover;
+    transform: rotate(180deg);
+    border-radius: 0 0 100px 100px;
+    filter: contrast(1.4) brightness(0.8) drop-shadow(0 20px 30px #000);
+    animation: ceiling-sway 3s ease-in-out infinite alternate;
+}
+
+.ceiling-drip-shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: linear-gradient(180deg, #000 0%, transparent 100%);
+}
+
+.ghost-whisper-tag {
+    font-family: 'Nosifer', cursive;
+    color: var(--blood-bright);
+    font-size: 0.95rem;
+    letter-spacing: 4px;
+    margin-top: 8px;
+    text-shadow: 0 0 10px #000, 0 0 15px var(--blood-crimson);
+    animation: pulse-glow 1.5s infinite;
+}
+
+/* 4. Floor Lay Ghost */
+#ghost-floor {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: 380px;
+    height: 300px;
+    z-index: 985;
+    pointer-events: none;
+    transition: transform 0.8s cubic-bezier(0.15, 0.85, 0.25, 1);
+}
+
+#ghost-floor.ghost-visible {
+    transform: translateX(-50%) translateY(0);
+}
+
+.ghost-floor-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.ghost-floor-wrapper img {
+    width: 360px;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 40px 40px 0 0;
+    filter: contrast(1.5) brightness(0.75) grayscale(0.2);
+    box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.95);
+    animation: floor-crawl 0.2s infinite alternate;
+}
+
+.floor-mist-shadow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 60%);
+}
+
+/* 5. Ghost Sudden Popup */
+#ghost-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.4);
+    width: 420px;
+    height: 520px;
+    z-index: 990;
+    pointer-events: none;
+    opacity: 0;
+    transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.25s ease;
+}
+
+#ghost-popup.ghost-visible {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 1;
+}
+
+.ghost-popup-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--blood-crimson);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(139, 0, 0, 0.8), 0 0 100px #000;
+}
+
+.ghost-popup-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.4) brightness(0.9);
+}
+
+.popup-glitch-border {
+    position: absolute;
+    inset: 0;
+    border: 3px solid rgba(255, 0, 0, 0.5);
+    animation: glitch 0.1s infinite;
+}
+
+/* === STALKER SHADOW SILHOUETTE === */
+#stalker-figure {
+    position: fixed;
+    bottom: 0;
+    z-index: 850;
+    pointer-events: none;
+    width: 220px;
+    height: 380px;
+    transition: opacity 1.5s ease;
+}
+
+#stalker-figure.stalker-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#stalker-figure.stalker-visible {
+    opacity: 0.65;
+    visibility: visible;
+}
+
+.stalker-shadow-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.15) contrast(2) drop-shadow(0 0 30px #000);
+}
+
+/* === BLOOD DRIPS FROM SCREEN TOP === */
+#blood-drips {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 120px;
+    pointer-events: none;
+    z-index: 870;
+    display: flex;
+    justify-content: space-around;
+}
+
+.blood-drop {
+    width: 14px;
+    height: 45px;
+    background: linear-gradient(180deg, var(--blood-dark) 0%, var(--blood-crimson) 80%, #900 100%);
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 8px rgba(100, 0, 0, 0.7);
+    animation: drip-expand 4s ease-in-out infinite alternate;
+}
+
+.drop-1 { height: 65px; animation-delay: 0.2s; }
+.drop-2 { height: 85px; animation-delay: 1.4s; }
+.drop-3 { height: 40px; animation-delay: 0.8s; }
+.drop-4 { height: 95px; animation-delay: 2.1s; }
+.drop-5 { height: 55px; animation-delay: 1.1s; }
+
+/* === STATIC / TV NOISE OVERLAY === */
+#static-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 99997;
+    background: repeating-radial-gradient(#000 0 0.0001%, #222 0 0.0002%);
+    background-size: 4px 4px;
+    opacity: 0.25;
+    mix-blend-mode: overlay;
+}
+
+#static-overlay.hidden {
+    display: none;
+}
+
+/* === MAIN HORROR CONTENT === */
+main#main-content {
+    position: relative;
+    z-index: 10;
+    transition: opacity 1.5s ease;
+}
+
+main.hidden-initially {
+    opacity: 0;
+    pointer-events: none;
+}
+
+main.active-view {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Section styling */
+.horror-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 90px 24px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(80, 0, 0, 0.3);
+}
+
+.section-content {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 20;
+}
+
+.section-subtitle {
+    font-family: 'Creepster', cursive;
+    font-size: 1.25rem;
+    color: var(--blood-bright);
+    letter-spacing: 5px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.section-badge {
+    display: inline-block;
+    padding: 4px 16px;
+    background: rgba(139, 0, 0, 0.2);
+    border: 1px solid var(--blood-crimson);
+    color: #ff4d4d;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+/* Fog Layers */
+.fog-layer {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(30, 0, 0, 0.2) 0%, #000 80%);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.fog-dense {
+    background: radial-gradient(ellipse at 50% 50%, rgba(20, 20, 25, 0.4) 0%, #020202 85%);
+}
+
+.fog-red {
+    background: radial-gradient(ellipse at 50% 40%, rgba(90, 0, 0, 0.35) 0%, #020202 85%);
+}
+
+.fog-green {
+    background: radial-gradient(ellipse at 50% 40%, rgba(10, 50, 15, 0.3) 0%, rgba(30, 0, 45, 0.2) 60%, #020202 90%);
+}
+
+.fog-dark {
+    background: radial-gradient(ellipse at 50% 50%, rgba(15, 15, 15, 0.6) 0%, #000 90%);
+}
+
+/* === HEADINGS & TEXT === */
+.glitch-text {
+    font-family: 'Nosifer', cursive;
+    font-size: clamp(2.2rem, 6.5vw, 4.2rem);
+    color: var(--blood-crimson);
+    letter-spacing: 4px;
+    margin-bottom: 24px;
+    text-shadow: 0 0 15px var(--blood-dark), 0 0 30px #000;
+    position: relative;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch-text::before {
+    color: #ff1100;
+    animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+    clip: rect(24px, 550px, 90px, 0);
+}
+
+.glitch-text::after {
+    color: #400000;
+    animation: glitch-anim-2 3.2s infinite linear alternate-reverse;
+    clip: rect(85px, 550px, 140px, 0);
+}
+
+.blood-text {
+    font-family: 'Nosifer', cursive;
+    font-size: clamp(2rem, 5.5vw, 3.6rem);
+    color: var(--blood-bright);
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px var(--blood-dark);
+}
+
+.joker-title {
+    color: #2ed573;
+    text-shadow: 0 0 25px rgba(46, 213, 115, 0.6), 0 0 40px var(--joker-purple);
+}
+
+.horror-description, .creepy-text {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: #b0b0b0;
+    max-width: 680px;
+    margin: 0 auto 30px;
+    font-weight: 400;
+    text-shadow: 0 2px 4px #000;
+}
+
+.scroll-invitation {
+    margin-top: 50px;
+}
+
+.scroll-label {
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    color: var(--blood-bright);
+    display: block;
+    margin-bottom: 12px;
+}
+
+.scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.scroll-arrow {
+    color: var(--blood-crimson);
+    font-size: 1.1rem;
+    animation: bounce-arrow 1.6s infinite;
+}
+
+.scroll-arrow:nth-child(2) { animation-delay: 0.2s; opacity: 0.7; }
+.scroll-arrow:nth-child(3) { animation-delay: 0.4s; opacity: 0.4; }
+
+/* === SECTION 2: HAUNTED CORRIDOR DOORS === */
+.corridor-doors {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 36px;
+}
+
+.door {
+    width: 170px;
+    height: 270px;
+    background: linear-gradient(180deg, #18110e 0%, #0d0908 100%);
+    border: 3px solid #3d2b1f;
+    border-radius: 8px 8px 0 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), inset 0 0 20px #000;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.door:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 45px rgba(100, 0, 0, 0.6), inset 0 0 30px rgba(139, 0, 0, 0.3);
+    border-color: var(--blood-crimson);
+}
+
+.door-frame {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
+}
+
+.door-number {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 3rem;
+    color: #4a382c;
+    transition: color 0.3s ease;
+}
+
+.door:hover .door-number {
+    color: var(--blood-bright);
+    text-shadow: 0 0 15px var(--blood-crimson);
+}
+
+.door-status {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    color: #777;
+    margin-top: 15px;
+    text-transform: uppercase;
+}
+
+.door-danger .door-status {
+    color: #ff3333;
+    font-weight: bold;
+    animation: pulse-text 1.2s infinite;
+}
+
+.door-scratch-marks {
+    position: absolute;
+    bottom: 20px;
+    width: 60px;
+    height: 35px;
+    background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(139, 0, 0, 0.5) 8px, rgba(139, 0, 0, 0.5) 10px);
+}
+
+/* === REAL GHOST DISPLAY STAGES === */
+.ghost-display-stage {
+    display: flex;
+    justify-content: center;
+    margin: 30px auto 40px;
+    perspective: 1000px;
+}
+
+.real-ghost-card {
+    position: relative;
+    width: 320px;
+    height: 440px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(139, 0, 0, 0.4);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.95), 0 0 30px rgba(80, 0, 0, 0.4);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.real-ghost-card:hover {
+    transform: scale(1.03) rotateY(2deg);
+    border-color: #ff0000;
+    box-shadow: 0 25px 70px rgba(139, 0, 0, 0.8), 0 0 50px rgba(255, 0, 0, 0.5);
+}
+
+.real-ghost-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.3) brightness(0.85) grayscale(0.15);
+    transition: filter 0.4s ease, transform 0.4s ease;
+}
+
+.real-ghost-card:hover .real-ghost-photo {
+    filter: contrast(1.5) brightness(1.1) saturate(1.2);
+    transform: scale(1.05);
+}
+
+/* Kanchana Stage Overlays */
+.spirit-blood-vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 40%, rgba(90, 0, 0, 0.5) 75%, rgba(10, 0, 0, 0.95) 100%);
+    pointer-events: none;
+}
+
+.spirit-eye-glare {
+    position: absolute;
+    top: 28%;
+    left: 48%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 25px;
+    background: radial-gradient(ellipse, rgba(255, 0, 0, 0.7) 0%, transparent 70%);
+    opacity: 0.6;
+    animation: demonic-glare 3s infinite alternate;
+    pointer-events: none;
+}
+
+.spirit-warning-overlay {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: #ff4d4d;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 6px;
+    text-transform: uppercase;
+}
+
+/* Annabelle Cabinet Display */
+.cabinet-display {
+    position: relative;
+    width: 320px;
+    height: 460px;
+}
+
+.cabinet-wood-frame {
+    width: 100%;
+    height: 100%;
+    background: #140d08;
+    border: 8px solid #2d1d13;
+    border-radius: 10px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95);
+    position: relative;
+    overflow: hidden;
+}
+
+.cabinet-glass-pane {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.annabelle-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.3) brightness(0.8) sepia(0.2);
+    transition: transform 0.5s ease;
+}
+
+.cabinet-display:hover .annabelle-photo {
+    transform: rotate(2deg) scale(1.04);
+}
+
+.glass-reflection {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 40%, rgba(255,255,255,0.05) 70%, transparent 100%);
+    pointer-events: none;
+}
+
+.glass-cracks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle at 50% 40%, transparent 30px, rgba(255, 255, 255, 0.1) 31px, transparent 33px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cabinet-display:hover .glass-cracks {
+    opacity: 1;
+}
+
+.cabinet-warning-sign {
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #c0392b;
+    color: #fff;
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    padding: 5px 18px;
+    border: 2px solid #000;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+}
+
+/* Joker Stage */
+.joker-card {
+    border-color: rgba(46, 213, 115, 0.5);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(46, 213, 115, 0.3);
+}
+
+.joker-card:hover {
+    border-color: #2ed573;
+    box-shadow: 0 25px 70px rgba(46, 213, 115, 0.6), 0 0 50px rgba(74, 14, 78, 0.8);
+}
+
+.joker-acid-fog {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 40%, rgba(31, 138, 47, 0.3) 70%, rgba(10, 0, 20, 0.85) 100%);
+    pointer-events: none;
+}
+
+.joker-quote-floating {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    font-family: 'Creepster', cursive;
+    font-size: 1.1rem;
+    color: #2ed573;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #000;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 6px;
+}
+
+.ha-ha-text {
+    font-family: 'Creepster', cursive;
+    color: #ff3333;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    animation: text-flicker 2s infinite;
+}
+
+/* Nun Crypt */
+.nun-card {
+    border-color: rgba(230, 184, 0, 0.3);
+}
+
+.unholy-darkness-halo {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 35%, rgba(0, 0, 0, 0.95) 85%);
+    pointer-events: none;
+}
+
+.pentagram-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 260px;
+    height: 260px;
+    opacity: 0.25;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.nun-card:hover .pentagram-overlay {
+    opacity: 0.65;
+    transform: translate(-50%, -50%) rotate(180deg);
+}
+
+/* === SECTION 7: CRAWLERS SHOWCASE === */
+.crawlers-showcase {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 35px;
+}
+
+.crawler-box {
+    width: 320px;
+    background: #08080a;
+    border: 2px solid rgba(80, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.crawler-box:hover {
+    transform: translateY(-6px);
+    border-color: var(--blood-crimson);
+    box-shadow: 0 20px 50px rgba(100, 0, 0, 0.6);
+}
+
+.crawler-img-wrap {
+    width: 100%;
+    height: 240px;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.ceiling-wrap img {
+    transform: rotate(180deg);
+}
+
+.crawler-specimen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.4) brightness(0.8) grayscale(0.2);
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.crawler-box:hover .crawler-specimen {
+    filter: contrast(1.6) brightness(1.05);
+    transform: scale(1.06);
+}
+
+.ceiling-wrap:hover .crawler-specimen {
+    transform: rotate(180deg) scale(1.06);
+}
+
+.crawler-dark-fade {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.85) 100%);
+}
+
+.crawler-card-title {
+    font-family: 'Nosifer', cursive;
+    font-size: 1rem;
+    color: var(--blood-bright);
+    margin: 15px 0 8px;
+    letter-spacing: 2px;
+}
+
+.crawler-card-desc {
+    font-size: 0.9rem;
+    color: #888;
+    line-height: 1.5;
+}
+
+/* === SECTION 8: ESCAPE TRAP === */
+.escape-btn {
+    background: linear-gradient(180deg, #500000 0%, #1f0000 100%);
+    border: 2px solid var(--blood-crimson);
+    color: #fff;
+    font-family: 'Creepster', cursive;
+    font-size: 1.5rem;
+    letter-spacing: 3px;
+    padding: 16px 44px;
+    border-radius: 6px;
+    box-shadow: 0 0 25px rgba(139, 0, 0, 0.5);
+    transition: transform 0.15s ease, background 0.3s ease;
+    margin-top: 25px;
+    position: relative;
+}
+
+.escape-btn:hover {
+    background: linear-gradient(180deg, #7a0000 0%, #2f0000 100%);
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+}
+
+/* === BLOODY MESSAGES & HANDPRINTS === */
+.floating-horror-text {
+    position: fixed;
+    font-family: 'Nosifer', cursive;
+    font-size: clamp(1.4rem, 4vw, 2.5rem);
+    color: var(--blood-bright);
+    text-shadow: 0 0 15px #000, 0 0 30px #ff0000;
+    pointer-events: none;
+    z-index: 970;
+    animation: float-dissolve 4s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+    letter-spacing: 4px;
+}
+
+@keyframes float-dissolve {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    15% {
+        opacity: 0.95;
+        transform: translateY(0) scale(1);
+    }
+    80% {
+        opacity: 0.85;
+        transform: translateY(-10px) scale(1.02);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-30px) scale(1.08);
+    }
+}
+
+.bloody-handprint {
+    position: fixed;
+    width: 65px;
+    height: 80px;
+    pointer-events: none;
+    z-index: 860;
+    animation: handprint-fade 7s forwards;
+}
+
+@keyframes handprint-fade {
+    0% { opacity: 0; transform: scale(1.2); }
+    10% { opacity: 0.85; transform: scale(1); }
+    70% { opacity: 0.75; }
+    100% { opacity: 0; transform: scale(0.95); }
+}
+
+/* === KEYFRAME ANIMATIONS === */
+@keyframes screen-convulsion {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    20% { transform: translate(-10px, 8px) rotate(-1deg); }
+    40% { transform: translate(12px, -6px) rotate(1.5deg); }
+    60% { transform: translate(-8px, -10px) rotate(-0.5deg); }
+    80% { transform: translate(10px, 12px) rotate(1deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes jumpscare-lunge {
+    0% { transform: scale(0.8) translateZ(0); }
+    50% { transform: scale(1.3) translateZ(0); }
+    100% { transform: scale(1.15) translateZ(0); }
+}
+
+@keyframes demonic-glare {
+    0% { opacity: 0.3; transform: scale(0.9); }
+    100% { opacity: 0.85; transform: scale(1.2); }
+}
+
+@keyframes ceiling-sway {
+    0% { transform: rotate(178deg) translateY(0); }
+    100% { transform: rotate(182deg) translateY(8px); }
+}
+
+@keyframes floor-crawl {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-4px); }
+}
+
+@keyframes ghost-twitch {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-3px) rotate(0.8deg); }
+}
+
+@keyframes pulse-shake {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08) rotate(-2deg); }
+}
+
+@keyframes text-flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 24%, 55% { opacity: 0.3; }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { filter: drop-shadow(0 0 5px var(--blood-crimson)); }
+    50% { filter: drop-shadow(0 0 20px #ff0000); }
+}
+
+@keyframes bounce-arrow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+}
+
+@keyframes drip-expand {
+    0% { transform: scaleY(0.8); }
+    100% { transform: scaleY(1.25); }
+}
+
+@keyframes demonic-blink {
+    0%, 90%, 100% { transform: scaleY(1); }
+    95% { transform: scaleY(0.1); }
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-3px, 3px); }
+    40% { transform: translate(-3px, -3px); }
+    60% { transform: translate(3px, 3px); }
+    80% { transform: translate(3px, -3px); }
+    100% { transform: translate(0); }
+}
+
+@keyframes glitch-anim-1 {
+    0% { clip: rect(20px, 9999px, 44px, 0); }
+    50% { clip: rect(70px, 9999px, 95px, 0); }
+    100% { clip: rect(15px, 9999px, 60px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+    0% { clip: rect(65px, 9999px, 110px, 0); }
+    50% { clip: rect(10px, 9999px, 50px, 0); }
+    100% { clip: rect(80px, 9999px, 130px, 0); }
+}

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Enter if you dare... A truly terrifying horror experience. Real movie ghosts, jump scares, and psychological terror. Do NOT scroll alone in the dark.">
+    <title>☠️ DO NOT ENTER ☠️ - The Horror Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&family=Eater&family=Metal+Mania&family=Cinzel+Decorative:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+</head>
+
+<body class="horror-body">
+    <!-- PRELOADED REAL AUDIO ASSETS -->
+    <audio id="audio-scream" src="sounds/scream.wav" preload="auto"></audio>
+    <audio id="audio-jumpscare" src="sounds/jumpscare_swell.wav" preload="auto"></audio>
+    <audio id="audio-joker" src="sounds/joker_laugh.wav" preload="auto"></audio>
+    <audio id="audio-laugh" src="sounds/laugh.ogg" preload="auto"></audio>
+
+    <!-- CURSOR BLOOD TRAIL CONTAINER -->
+    <div id="cursor-trail-container"></div>
+
+    <!-- VIGNETTE / FLASHLIGHT OVERLAY (Stalker dark vision) -->
+    <div id="stalker-flashlight"></div>
+
+    <!-- SCREEN FLASH OVERLAY (for thunder & jumpscares) -->
+    <div id="flash-overlay"></div>
+
+    <!-- FULL SCREEN JUMPSCARE OVERLAY -->
+    <div id="jumpscare-overlay" class="jumpscare-hidden">
+        <div id="jumpscare-content">
+            <img id="jumpscare-img" src="images/screamer.jpg" alt="Terror">
+            <div id="jumpscare-blood-splatter"></div>
+            <div id="jumpscare-text">YOU ARE DEAD</div>
+        </div>
+    </div>
+
+    <!-- CLICK TO ENTER OVERLAY -->
+    <div id="enter-screen">
+        <div class="enter-content">
+            <div class="warning-symbol">⚠️</div>
+            <h1 class="enter-title">DO NOT ENTER</h1>
+            <p class="enter-subtitle">Real ghosts. Visceral jump scares. Extreme audio volume.</p>
+            <p class="enter-warning">🔊 TURN UP YOUR VOLUME AND DIM YOUR LIGHTS 🔊</p>
+            <button id="enter-btn" class="enter-button">
+                <span class="btn-text">ENTER AT YOUR OWN RISK</span>
+                <span class="btn-skull">💀</span>
+            </button>
+            <p class="enter-disclaimer">Heart patients and faint-hearted are strictly warned to leave.</p>
+        </div>
+    </div>
+
+    <!-- STALKER EYES IN THE DARK -->
+    <div id="stalker-eyes" class="stalker-hidden">
+        <div class="stalker-eye left-eye">
+            <div class="stalker-pupil" id="left-pupil"></div>
+        </div>
+        <div class="stalker-eye right-eye">
+            <div class="stalker-pupil" id="right-pupil"></div>
+        </div>
+    </div>
+
+    <!-- GHOST EVENT APPARITIONS (Side hang, Ceiling stick, Floor crawl, Popouts) -->
+    <div id="ghost-left" class="ghost-side-hang ghost-hidden">
+        <div class="ghost-wrapper">
+            <img id="ghost-left-img" src="images/nun.jpg" alt="Ghost Left">
+            <div class="ghost-shadow-blend"></div>
+        </div>
+    </div>
+
+    <div id="ghost-right" class="ghost-side-hang ghost-hidden">
+        <div class="ghost-wrapper">
+            <img id="ghost-right-img" src="images/annabelle.jpg" alt="Ghost Right">
+            <div class="ghost-shadow-blend"></div>
+        </div>
+    </div>
+
+    <div id="ghost-ceiling" class="ghost-ceiling-stick ghost-hidden">
+        <div class="ghost-ceiling-wrapper">
+            <img id="ghost-ceiling-img" src="images/crawler.jpg" alt="Ceiling Crawler">
+            <div class="ceiling-drip-shadow"></div>
+            <span class="ghost-whisper-tag">LOOK UP</span>
+        </div>
+    </div>
+
+    <div id="ghost-floor" class="ghost-floor-lay ghost-hidden">
+        <div class="ghost-floor-wrapper">
+            <img id="ghost-floor-img" src="images/screamer.jpg" alt="Floor Crawler">
+            <div class="floor-mist-shadow"></div>
+            <span class="ghost-whisper-tag">DON'T LOOK DOWN</span>
+        </div>
+    </div>
+
+    <div id="ghost-popup" class="ghost-sudden-popup ghost-hidden">
+        <div class="ghost-popup-card">
+            <img id="ghost-popup-img" src="images/kanchana.jpg" alt="Apparition">
+            <div class="popup-glitch-border"></div>
+        </div>
+    </div>
+
+    <!-- STALKER SHADOW SILHOUETTE -->
+    <div id="stalker-figure" class="stalker-hidden">
+        <img src="images/shadow_ghost.jpg" alt="Shadow Stalker" class="stalker-shadow-img">
+    </div>
+
+    <!-- BLOOD DRIPS AT TOP OF SCREEN -->
+    <div id="blood-drips">
+        <div class="blood-drop drop-1"></div>
+        <div class="blood-drop drop-2"></div>
+        <div class="blood-drop drop-3"></div>
+        <div class="blood-drop drop-4"></div>
+        <div class="blood-drop drop-5"></div>
+    </div>
+
+    <!-- STATIC / GLITCH TV OVERLAY -->
+    <div id="static-overlay" class="hidden"></div>
+
+    <!-- MAIN HAUNTED CONTENT -->
+    <main id="main-content" class="hidden-initially">
+
+        <!-- SECTION 1 - Welcome to Hell -->
+        <section class="horror-section section-welcome" id="section-1">
+            <div class="fog-layer"></div>
+            <div class="section-content">
+                <span class="section-subtitle">WELCOME TO YOUR NIGHTMARE</span>
+                <h1 class="glitch-text" data-text="HELL AWAITS YOU">HELL AWAITS YOU</h1>
+                <p class="horror-description">You should have listened. The spirits of the condemned are trapped here
+                    with you. As you scroll, they watch. As you breathe, they draw nearer.</p>
+                <div class="scroll-invitation">
+                    <span class="scroll-label">SCROLL DOWN IF YOU DARE</span>
+                    <div class="scroll-indicator">
+                        <div class="scroll-arrow">▼</div>
+                        <div class="scroll-arrow">▼</div>
+                        <div class="scroll-arrow">▼</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2 - The Haunted Corridor (Interactive Doors) -->
+        <section class="horror-section section-corridor" id="section-2">
+            <div class="fog-layer fog-dense"></div>
+            <div class="section-content">
+                <h2 class="blood-text">THE HAUNTED CORRIDOR</h2>
+                <p class="creepy-text typewriter" id="typewriter-1">Three locked doors stand before you. Only one leads
+                    forward... the others lead directly into the claws of the dead. Which will you open?</p>
+
+                <div class="corridor-doors">
+                    <div class="door" id="door-1" onclick="openDoor(1)">
+                        <div class="door-frame">
+                            <span class="door-number">I</span>
+                            <span class="door-status">WHISPERS</span>
+                            <div class="door-scratch-marks"></div>
+                        </div>
+                    </div>
+                    <div class="door" id="door-2" onclick="openDoor(2)">
+                        <div class="door-frame">
+                            <span class="door-number">II</span>
+                            <span class="door-status">LAUGHTER</span>
+                            <div class="door-scratch-marks"></div>
+                        </div>
+                    </div>
+                    <div class="door" id="door-3" onclick="openDoor(3)">
+                        <div class="door-frame door-danger">
+                            <span class="door-number">III</span>
+                            <span class="door-status">DO NOT OPEN</span>
+                            <div class="door-scratch-marks"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3 - Kanchana's Lair (Real Kanchana) -->
+        <section class="horror-section section-kanchana" id="section-3">
+            <div class="fog-layer fog-red"></div>
+            <div class="section-content">
+                <div class="section-badge">VENGEFUL SPIRIT</div>
+                <h2 class="glitch-text" data-text="KANCHANA">KANCHANA</h2>
+
+                <div class="ghost-display-stage" id="kanchana-stage" onclick="triggerKanchanaScare()">
+                    <div class="real-ghost-card kanchana-card">
+                        <img src="images/kanchana.jpg" alt="Kanchana Horror Spirit"
+                            class="real-ghost-photo kanchana-photo">
+                        <div class="spirit-blood-vignette"></div>
+                        <div class="spirit-eye-glare"></div>
+                        <div class="spirit-warning-overlay">CLICK HER FACE IF YOU DARE</div>
+                    </div>
+                </div>
+
+                <p class="creepy-text">The betrayed spirit roams these cursed grounds. Ash and turmeric smear her
+                    wrath-consumed face. When she screams, your very blood freezes inside your veins.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 4 - Annabelle's Cabinet (Real Annabelle Doll) -->
+        <section class="horror-section section-annabelle" id="section-4">
+            <div class="fog-layer"></div>
+            <div class="section-content">
+                <div class="section-badge">POSSESSED CONDUIT</div>
+                <h2 class="blood-text dripping">ANNABELLE</h2>
+
+                <div class="ghost-display-stage" id="annabelle-stage" onclick="triggerAnnabelleScare()">
+                    <div class="cabinet-display">
+                        <div class="cabinet-wood-frame">
+                            <div class="cabinet-glass-pane">
+                                <img src="images/annabelle.jpg" alt="Annabelle Doll"
+                                    class="real-ghost-photo annabelle-photo">
+                                <div class="glass-reflection"></div>
+                                <div class="glass-cracks" id="glass-cracks"></div>
+                            </div>
+                        </div>
+                        <div class="cabinet-warning-sign">POSITIVELY DO NOT OPEN</div>
+                    </div>
+                </div>
+
+                <p class="creepy-text">The doll does not harm you directly. The demonic entity bound to her does. Her
+                    porcelain head slowly turns to follow every movement of your cursor. Look closely at her eyes.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 5 - The Joker's Asylum (Real Joker) -->
+        <section class="horror-section section-joker" id="section-5">
+            <div class="fog-layer fog-green"></div>
+            <div class="section-content">
+                <div class="section-badge">PSYCHOTIC NIGHTMARE</div>
+                <h2 class="glitch-text joker-title" data-text="WHY SO SERIOUS?">WHY SO SERIOUS?</h2>
+
+                <div class="ghost-display-stage" id="joker-stage" onclick="triggerJokerScare()">
+                    <div class="real-ghost-card joker-card">
+                        <img src="images/joker.jpg" alt="The Joker Horror" class="real-ghost-photo joker-photo"
+                            id="joker-img-element">
+                        <div class="joker-acid-fog"></div>
+                        <div class="joker-bloody-smile-overlay"></div>
+                        <div class="joker-quote-floating">"LET'S PUT A SMILE ON THAT FACE!"</div>
+                    </div>
+                </div>
+
+                <p class="creepy-text joker-quote">"All it takes is one bad day to reduce the sanest man alive to
+                    lunacy." <br><span class="ha-ha-text">HA HA HA HA HA HA HA HA!</span></p>
+            </div>
+        </section>
+
+        <!-- SECTION 6 - The Nun's Crypt (Valak / Demonic Nun) -->
+        <section class="horror-section section-nun" id="section-6">
+            <div class="fog-layer fog-dense"></div>
+            <div class="section-content">
+                <div class="section-badge">UNHOLY DEMON</div>
+                <h2 class="blood-text">VALAK : THE DEMONIC NUN</h2>
+
+                <div class="ghost-display-stage" id="nun-stage" onclick="triggerNunScare()">
+                    <div class="real-ghost-card nun-card">
+                        <img src="images/nun.jpg" alt="Valak The Demonic Nun" class="real-ghost-photo nun-photo">
+                        <div class="unholy-darkness-halo"></div>
+                        <div class="nun-glowing-eyes"></div>
+                        <div class="pentagram-overlay">
+                            <svg viewBox="0 0 200 200" class="pentagram-svg">
+                                <polygon points="100,10 40,198 190,78 10,78 160,198" fill="none" stroke="crimson"
+                                    stroke-width="2" />
+                                <circle cx="100" cy="100" r="95" fill="none" stroke="crimson" stroke-width="1.5" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="creepy-text">Born from the deepest catacombs of the desecrated abbey. Those who look directly
+                    into her sunken eyes never awaken from their sleep.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 7 - The Crawler Ward (Ceiling & Floor Crawlers) -->
+        <section class="horror-section section-crawlers" id="section-7">
+            <div class="fog-layer fog-dark"></div>
+            <div class="section-content">
+                <div class="section-badge">CONTORTED ABOMINATIONS</div>
+                <h2 class="glitch-text" data-text="THE CRAWLERS">THE CRAWLERS</h2>
+                <p class="creepy-text">They do not walk like mortals. Look up: they cling to the ceiling beams, waiting
+                    to drop. Look down: they drag their broken bones across the floorboards.</p>
+
+                <div class="crawlers-showcase">
+                    <div class="crawler-box ceiling-box" onclick="triggerCeilingCrawlerEvent()">
+                        <div class="crawler-img-wrap ceiling-wrap">
+                            <img src="images/crawler.jpg" alt="Ceiling Demon" class="crawler-specimen">
+                            <div class="crawler-dark-fade"></div>
+                        </div>
+                        <div class="crawler-card-title">STICKING TO THE CEILING</div>
+                        <p class="crawler-card-desc">Swaying silently above your head, inches from your hair.</p>
+                    </div>
+
+                    <div class="crawler-box floor-box" onclick="triggerFloorCrawlerEvent()">
+                        <div class="crawler-img-wrap floor-wrap">
+                            <img src="images/screamer.jpg" alt="Floor Demon" class="crawler-specimen">
+                            <div class="crawler-dark-fade"></div>
+                        </div>
+                        <div class="crawler-card-title">LAID DOWN ON THE FLOOR</div>
+                        <p class="crawler-card-desc">Creeping under the bed, reaching for bare ankles in the dark.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8 - The Escape Trap -->
+        <section class="horror-section section-escape" id="section-8">
+            <div class="fog-layer"></div>
+            <div class="section-content">
+                <h2 class="glitch-text" data-text="THERE IS NO ESCAPE">THERE IS NO ESCAPE</h2>
+                <p class="creepy-text">You thought you could simply close this tab or walk away? The spirits have
+                    already memorized your face. Click the button below to attempt to break the curse...</p>
+                <button class="escape-btn" id="escape-btn" onmouseenter="evadeEscape()" onclick="tryEscape()">
+                    🚪 EXIT THIS SITE
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- BLOODY MESSAGES CONTAINER -->
+    <div id="random-text-container"></div>
+
+    <!-- BLOODY HANDPRINTS CONTAINER -->
+    <div id="handprints-container"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
